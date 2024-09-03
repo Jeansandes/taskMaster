@@ -1,6 +1,9 @@
 package com.sandesdev.taskMaster.models;
 
+import com.sandesdev.taskMaster.dtos.LoginRequest;
 import jakarta.persistence.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -80,5 +83,9 @@ public class UserModel {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public boolean IsLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(loginRequest.password(),this.password);
     }
 }
