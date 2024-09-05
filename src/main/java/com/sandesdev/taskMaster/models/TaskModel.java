@@ -16,7 +16,8 @@ public class TaskModel {
     private  String description;
     private Instant criation;
     private Instant conclusion;
-    @Enumerated(EnumType.STRING)
+    @OneToOne
+    @JoinColumn(name = "status_id")
     private Status status;
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -78,5 +79,9 @@ public class TaskModel {
 
     public void setUser(UserModel user) {
         this.user = user;
+    }
+
+    public void setStatus(Status.Values values) {
+
     }
 }

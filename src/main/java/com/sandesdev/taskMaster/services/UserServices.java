@@ -6,6 +6,7 @@ import com.sandesdev.taskMaster.models.Role;
 import com.sandesdev.taskMaster.models.UserModel;
 import com.sandesdev.taskMaster.repositories.RoleRepository;
 import com.sandesdev.taskMaster.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,13 @@ public class UserServices {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
 
+    public UserServices(ModelMapper mapper, UserRepository userRepository, RoleRepository roleRepository) {
+        this.mapper = mapper;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+    }
+
+    @Transactional
     public void save(UserDto userDto) {
         var basicRole = roleRepository.findByName(Role.Values.BASIC.name());
         var user = userRepository.findByName(userDto.name());
@@ -27,7 +35,7 @@ public class UserServices {
         UserModel userModel = new UserModel();
         mapper.map(userDto,userModel);
         userModel.setData(Instant.now());
-        userModel.setRoles(Set.of(basicRole.get()));
+        userModel.setRoles(Set.of(basicRole));
         userRepository.save(userModel);
     }
 }

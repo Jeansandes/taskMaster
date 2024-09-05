@@ -1,12 +1,12 @@
 package com.sandesdev.taskMaster.repositories;
 
-import com.sandesdev.taskMaster.models.Role;
+import com.sandesdev.taskMaster.models.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface RoleRepository extends JpaRepository<Role, Long> {
-    Role findByName(String name);
+public interface StatusRepository extends JpaRepository<Status, Long> {
+    Status findByName(String name);
 }

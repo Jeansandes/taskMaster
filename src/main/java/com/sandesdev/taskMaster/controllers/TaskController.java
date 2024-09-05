@@ -16,6 +16,10 @@ import java.util.UUID;
 public class TaskController {
     private TaskService taskService;
 
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
+    }
+
     @PostMapping
     public ResponseEntity<Void> createTask(@RequestBody TaskItemDto taskDto,JwtAuthenticationToken token){
         taskService.save(taskDto, token);
@@ -38,7 +42,7 @@ public class TaskController {
     @PutMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> putTask(@RequestBody TaskItemDto taskDto,JwtAuthenticationToken token){
-        taskService.updateTask(taskDto, token)
+        taskService.updateTask(taskDto, token);
         return ResponseEntity.ok().build();
     }
 }

@@ -1,4 +1,6 @@
 package com.sandesdev.taskMaster.dtos;
 
-public record TaskItemDto(String title, String description) {
+import com.sandesdev.taskMaster.models.Status;
+
+public record TaskItemDto(String title, String description, String status) {
 }
