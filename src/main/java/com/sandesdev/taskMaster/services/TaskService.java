@@ -1,8 +1,10 @@
 package com.sandesdev.taskMaster.services;
 
 import com.sandesdev.taskMaster.dtos.TaskItemDto;
+import com.sandesdev.taskMaster.dtos.TaskResponse;
+import com.sandesdev.taskMaster.dtos.TitleDto;
 import com.sandesdev.taskMaster.exceptions.ForbiddenException;
-import com.sandesdev.taskMaster.exceptions.IdNotFoundException;
+import com.sandesdev.taskMaster.exceptions.TaskNotFoundException;
 import com.sandesdev.taskMaster.models.Role;
 import com.sandesdev.taskMaster.models.TaskModel;
 import com.sandesdev.taskMaster.repositories.StatusRepository;
@@ -44,20 +46,26 @@ public class TaskService {
 
     }
 
-    public Page<TaskItemDto> getAllTasks(int page, int pageSize) {
-        var tasks = taskRepository.findAll(PageRequest.of(page, pageSize, Sort.Direction.DESC, "creationTimestamp"))
-                .map(task ->
-                        new TaskItemDto(
-                                task.getTitle(),
-                                task.getDescription(),
-                                task.getStatus().getName())
-                );
-                return tasks;
+    public Page<TaskResponse> getAllTasks(int page, int pageSize,JwtAuthenticationToken token) {
+            var userId = UUID.fromString(token.getName());
+            var user = userRepository.findById(userId);
+            var tasks = taskRepository.findAllByUser(user.get(),PageRequest.of(page, pageSize, Sort.Direction.DESC, "criation"))
+                    .map(task ->
+                            new TaskResponse(
+                                    task.getTaskId(),
+                                    task.getTitle(),
+                                    task.getDescription(),
+                                    task.getStatus().getName(),
+                                    task.getCriation(),
+                                    task.getConclusion()
+                            )
+                    );
+            return tasks;
     }
 
-    public void delete(UUID id, JwtAuthenticationToken token) {
+    public void delete(TitleDto titleDto, JwtAuthenticationToken token) {
         var user = userRepository.findById(UUID.fromString(token.getName()));
-        var task = taskRepository.findById(id).orElseThrow( ()-> new IdNotFoundException("id not found!"));
+        var task = taskRepository.findByTitle(titleDto.title()).orElseThrow(() -> new TaskNotFoundException("Title not found!"));
 
         var isAdmin = user.get().getRoles()
                         .stream().anyMatch(role -> role.getName().equalsIgnoreCase(Role.Values.ADMIN.name()));
@@ -69,11 +77,11 @@ public class TaskService {
         }
     }
 
-    public void updateTask(TaskItemDto taskDto, JwtAuthenticationToken token) {
+    public void updateTask(UUID id, TaskItemDto taskDto, JwtAuthenticationToken token) {
         var status = statusRepository.findByName(taskDto.status());
         var user = userRepository.findById(UUID.fromString(token.getName()));
         var taskModel = new TaskModel();
-        taskModel.setTaskId(user.get().getUserId());
+        taskModel.setTaskId(id);
         taskModel.setTitle(taskDto.title());
         taskModel.setDescription(taskDto.description());
         taskModel.setCriation(Instant.now());

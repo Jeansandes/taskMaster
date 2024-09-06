@@ -3,6 +3,7 @@ package com.sandesdev.taskMaster.models;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -12,13 +13,16 @@ public class TaskModel {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "task_id")
     private UUID taskId;
+    @Column(unique = true)
     private String title;
     private  String description;
     private Instant criation;
     private Instant conclusion;
-    @OneToOne
+
+    @ManyToOne
     @JoinColumn(name = "status_id")
     private Status status;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserModel user;
