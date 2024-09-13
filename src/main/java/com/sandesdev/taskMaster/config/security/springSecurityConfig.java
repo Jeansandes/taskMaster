@@ -1,4 +1,4 @@
-package com.sandesdev.taskMaster.config;
+package com.sandesdev.taskMaster.config.security;
 
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;

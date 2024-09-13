@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -30,7 +31,8 @@ public class UserModel {
     )
     private Set<Role> roles;
 
-    public UserModel( String name, String email, String password) {
+    public UserModel(UUID id, String name, String email, String password) {
+        this.userId = id;
         this.name = name;
         this.email = email;
         this.password = password;
@@ -87,5 +89,18 @@ public class UserModel {
 
     public boolean IsLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
         return passwordEncoder.matches(loginRequest.password(),this.password);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserModel userModel = (UserModel) o;
+        return Objects.equals(userId, userModel.userId) && Objects.equals(name, userModel.name) && Objects.equals(email, userModel.email) && Objects.equals(password, userModel.password) && Objects.equals(data, userModel.data) && Objects.equals(roles, userModel.roles);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, name, email, password, data, roles);
     }
 }

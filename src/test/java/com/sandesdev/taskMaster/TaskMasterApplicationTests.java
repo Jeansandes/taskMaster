@@ -7,7 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class TaskMasterApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void main() {
+		TaskMasterApplication.main(new String[] {});
 	}
 
 }

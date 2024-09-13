@@ -1,4 +1,4 @@
-package com.sandesdev.taskMaster.config;
+package com.sandesdev.taskMaster.config.admin;
 
 import com.sandesdev.taskMaster.models.Role;
 import com.sandesdev.taskMaster.models.UserModel;
