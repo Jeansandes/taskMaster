@@ -27,7 +27,7 @@ class UserServicesTest {
     private static final UUID ID = UUID.randomUUID();
     private static final String EMAIL = "jean";
     private static final String NAME = "jean@gmail.com";
-    private static final String PASSWORDENCODER = "123";
+    private static final String PASSWORDENCODER = "12345678";
     @InjectMocks
     private UserServices userServices;
     @Mock
@@ -48,8 +48,8 @@ class UserServicesTest {
     }
 
     private void startContent() {
-        userDto = new UserDto(NAME, EMAIL,PASSWORD);
-        userModel = new UserModel(ID,NAME,EMAIL,PASSWORD);
+        userDto = new UserDto(NAME, EMAIL,PASSWORDENCODER);
+        userModel = new UserModel(ID,NAME,EMAIL,PASSWORDENCODER);
         basicRole = new Role(1L, "basic");
     }
 

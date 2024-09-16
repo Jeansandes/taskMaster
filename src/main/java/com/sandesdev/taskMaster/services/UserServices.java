@@ -2,12 +2,14 @@ package com.sandesdev.taskMaster.services;
 
 import com.sandesdev.taskMaster.config.admin.AdminConfig;
 import com.sandesdev.taskMaster.dtos.UserDto;
+import com.sandesdev.taskMaster.exceptions.PasswordInvalidExceeption;
 import com.sandesdev.taskMaster.exceptions.UserAlreadyExistsException;
 import com.sandesdev.taskMaster.models.Role;
 import com.sandesdev.taskMaster.models.UserModel;
 import com.sandesdev.taskMaster.repositories.RoleRepository;
 import com.sandesdev.taskMaster.repositories.UserRepository;
 import jakarta.transaction.Transactional;
+import org.apache.kafka.common.config.types.Password;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,12 +45,16 @@ public class UserServices {
         UserModel userModel = new UserModel();
         userModel.setName(userDto.name());
         userModel.setEmail(userDto.email());
+        if(userDto.password().length() < 8 || userDto.password().length() > 8){
+            throw new PasswordInvalidExceeption("Quantidade de caracteres inválido para a senha!");
+        }
         userModel.setPassword(passwordEncoder.encode(userDto.password()));
         userModel.setData(Instant.now());
         userModel.setRoles(Set.of(basicRole));
         userRepository.save(userModel);
         sendMessage(new UserDto(userDto.name(),userDto.email(),userModel.getPassword()),partition);
     }
+
     public void sendMessage(UserDto userDto, int parition){
         logger.info("mensagem enviada para partição: "+parition);
         kafkaTemplate.send("taskMaster_email_kafka",parition,null, userDto);
