@@ -29,6 +29,16 @@ public class TaskModel {
 
     public TaskModel(){}
 
+    public TaskModel(UUID taskId, String title, String description, Instant criation, Instant conclusion, Status status, UserModel user) {
+        this.taskId = taskId;
+        this.title = title;
+        this.description = description;
+        this.criation = criation;
+        this.conclusion = conclusion;
+        this.status = status;
+        this.user = user;
+    }
+
     public UUID getTaskId() {
         return taskId;
     }

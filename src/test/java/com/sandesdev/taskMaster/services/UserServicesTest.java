@@ -76,7 +76,7 @@ class UserServicesTest {
             userServices.save(userDto);
         }catch (Exception e){
             assertEquals(UserAlreadyExistsException.class,e.getClass());
-            assertEquals("usuário já existe!",e.getMessage());
+            assertEquals("Usuário já existe",e.getMessage());
         }
 
 
